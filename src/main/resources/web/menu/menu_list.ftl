@@ -40,6 +40,7 @@
                    cellspacing="0" width="100%">
                 <thead>
                 <tr>
+                    <th class="tn" width="4%"><input class="all" name="" type="checkbox" hidden></th>
                     <th class="tn">菜单名称</th>
                     <th class="tn">资源值</th>
                     <th class="tn">上级菜单</th>
