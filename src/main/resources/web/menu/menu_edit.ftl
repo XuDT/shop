@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>菜单管理</title>
+    <title>菜单修改</title>
 </head>
 <#include "../common/common.ftl" />
 <script src="/js/basis/menu.js"></script>

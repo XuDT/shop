@@ -24,7 +24,7 @@ $(function () {
         }
     });
 
-    //选择商品进行删除
+    //选择菜单进行删除
     $(".deletebtn").click(function () {
         var length = $('.checkId:checked').length;
         if (length < 1) {

@@ -5,6 +5,7 @@
     <title>我的购物车</title>
 </head>
 <#include "../common/common.ftl" />
+<script src="/js/basis/userOrder.js"></script>
 <body>
 <div>
     <div class="ibox-content" style="margin-top: 10px;width: 94%;margin-left: 3%;">
@@ -34,36 +35,4 @@
     </div>
 </div>
 </body>
-<script>
-
-    //根据id删除订单
-    function deleteById() {
-        var id = $("input[name='checkId']:checked").val();
-        popup.confirm('是否确认删除?', function() {
-            $.get("/order/deleteById", {id: id}, function(data) {
-                if (data.success) {
-                    layer.msg("删除成功!", {icon:6,time:1000});
-                    window.location.reload();
-                } else {
-                    popup.alert('删除失败!');
-                }
-            });
-        })
-    }
-
-    $(function () {
-        //选择商品进行删除
-        $(".deletebtn").click(function () {
-            var length = $('.checkId:checked').length;
-            if (length < 1) {
-                popup.alert('未选中任何项!');
-                return false;
-            } else if (length > 1) {
-                popup.alert("请选择其中一项编辑!");
-            } else {
-                deleteById($('.checkId:checked').val());
-            }
-        });
-    });
-</script>
 </html>

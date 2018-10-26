@@ -34,33 +34,12 @@
                                 <input id="p" name="password" class="inputstyle password" type="password">
                             </div>
                         </div>
-                        <div style="padding-left:50px;margin-top:20px;"><input value="登 录" type="submit" style="width:150px;" class="button_blue" onclick="submitAuth();"></div>
+                        <div style="padding-left:50px;margin-top:20px;"><input value="登 录" type="submit" style="width:150px;" class="button_blue" onclick="adminLogin();"></div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    //登录
-    function submitAuth(role) {
-        $.ajax({
-            type: 'POST',//方法类型
-            dataType: 'json',//预期服务器返回的数据类型
-            url: '/auth',//url
-            data: {'username': $('#u').val(), 'password': $('#p').val()},
-            success: function (data) {
-                if (data.success) {
-                    layer.msg("登录成功",{icon:6,time:1000},function () {
-                            location.href = '/index';
-
-                    })
-                } else {
-                    popup.alert(data.msg);
-                }
-            }
-        })
-    }
-</script>
 </body>
 </html>

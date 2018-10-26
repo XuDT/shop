@@ -1,5 +1,5 @@
 $(function () {
-    //选择商品进行修改
+    //选择订单进行修改
     $(".updatebtn").click(function () {
         var length = $('.checkId:checked').length;
         if (length < 1) {
@@ -12,7 +12,7 @@ $(function () {
         }
     });
 
-    //选择商品进行删除
+    //选择订单进行删除
     $(".deletebtn").click(function () {
         var length = $('.checkId:checked').length;
         if (length < 1) {

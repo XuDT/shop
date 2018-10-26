@@ -1,3 +1,59 @@
+//登录
+function adminLogin() {
+    $.ajax({
+        type: 'POST',//方法类型
+        dataType: 'json',//预期服务器返回的数据类型
+        url: '/auth',//url
+        data: {'username': $('#u').val(), 'password': $('#p').val()},
+        success: function (data) {
+            if (data.success) {
+                layer.msg("登录成功",{icon:6,time:1000},function () {
+                    location.href = '/index';
+                })
+            } else {
+                popup.alert(data.msg);
+            }
+        }
+    })
+}
+//登录
+function userLogin() {
+    $.ajax({
+        type: 'POST',//方法类型
+        dataType: 'json',//预期服务器返回的数据类型
+        url: '/auth',//url
+        data: {'username': $('#u').val(), 'password': $('#p').val()},
+        success: function (data) {
+            if (data.success) {
+                layer.msg("登录成功",{icon:6,time:1000},function () {
+                    location.href = '/mallIndex';
+                })
+            } else {
+                popup.alert(data.msg);
+            }
+        }
+    })
+}
+//注册
+function registered() {
+    $.ajax({
+        type: 'POST',//方法类型
+        dataType: 'json',//预期服务器返回的数据类型
+        url: '/user/registered',//url
+        data: $("#regUser").serialize(),
+        success: function (data) {
+            if (data.success) {
+                layer.msg("提交成功!", {icon: 6, time: 1000}, function () {
+                    location.href = '/mallIndex';
+                })
+            } else {
+                popup.alert(data.msg);
+            }
+        }
+    });
+}
+
+
 $(function(){
 	$('#switch_qlogin').click(function(){
 		$('#switch_login').removeClass("switch_btn_focus").addClass('switch_btn');
