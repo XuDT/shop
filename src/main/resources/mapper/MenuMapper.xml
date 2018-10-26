@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--菜单管理-->
+<mapper namespace="com.xudt.shop.dao.MenuDao">
+
+    <parameterMap id="MenuDao" type="com.xudt.shop.model.MenuDTO"/>
+
+    <sql id="Base_Column_List">
+		id, name, level, pid, path, code
+	</sql>
+
+    <!--查询菜单列表-->
+    <select id="findMenuList" resultType="com.xudt.shop.model.MenuDTO" parameterType="int">
+        SELECT * FROM ( SELECT * FROM
+        (SELECT id,NAME,LEVEL,path,IF(pid=0,NULL,NULL) pid ,NAME parentname FROM t_menu sm
+        WHERE sm.pid=0 ORDER BY LEVEL)
+        t2
+        UNION
+        SELECT * FROM(SELECT sm.id,sm.name,sm.level,sm.path,sm.pid,su.name parentname
+        FROM t_menu sm
+        INNER JOIN t_menu su ON sm.pid=su.id
+        WHERE sm.pid!=0 ORDER BY sm.pid,sm.level
+        )t1
+        ) t3
+        <where>
+            <choose>
+                <when test="_parameter != null">
+                    name like CONCAT("%",#{keyword},"%")
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <!--新增菜单-->
+    <insert id="insertMenu">
+       INSERT INTO t_menu (name,level,pid,path,code) VALUE ( #{name}, #{level}, #{pid}, #{path}, #{code})
+   </insert>
+
+    <!--根据id查询菜单-->
+    <select id="findMenuById" parameterType="int" resultType="com.xudt.shop.model.MenuDTO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_menu where id=#{id}
+    </select>
+
+    <!--根据id查询父级菜单-->
+    <select id="findParentsMenu" resultType="com.xudt.shop.model.MenuDTO" parameterType="int">
+        select
+        <include refid="Base_Column_List"/>
+        from t_menu sm WHERE sm.pid=0
+        <choose>
+            <when test="_parameter != null and _parameter !=''">
+                and id != #{id}
+            </when>
+        </choose>
+        ORDER BY sm.level
+    </select>
+
+    <!--根据Id查询子菜单-->
+    <select id="findChildMenuByPid" resultType="com.xudt.shop.model.MenuDTO" parameterType="int">
+        select
+        <include refid="Base_Column_List"/>
+        from t_menu sm WHERE sm.pid!=0 and sm.pid=#{id} ORDER BY sm.level
+    </select>
+
+    <!--修改菜单-->
+    <update id="updateMenuById" parameterType="MenuDTO">
+        update t_menu set name = #{name}, level = #{level}, pid = #{pid}, path = #{path}, code = #{code}
+        where id = #{id}
+    </update>
+
+    <!--检测编码是否重复-->
+    <select id="checkCode" parameterType="MenuDTO" resultType="com.xudt.shop.model.MenuDTO">
+        select <include refid="Base_Column_List"/>
+        from t_menu
+        where 1=1
+        <choose>
+            <when test="id !=null and id != ''">
+                and id != #{id} and code = #{code}
+            </when>
+            <otherwise>
+                and code = #{code}
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--根据id删除菜单-->
+    <delete id="deleteById" parameterType="int">
+		delete from t_menu where id = #{id}
+	</delete>
+</mapper>

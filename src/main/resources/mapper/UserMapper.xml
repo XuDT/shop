@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--用户管理-->
+<mapper namespace="com.xudt.shop.dao.UserDao">
+
+    <parameterMap id="Commodity" type="com.xudt.shop.model.UserDTO"/>
+
+    <sql id="Base_Column_List">
+		id, username, password, tel, nickname, role_id, create_time, update_time, delete_status, address, points
+	</sql>
+
+    <!--检验用户名是否存在-->
+    <select id="queryExistUsername"  parameterType="String" resultType="com.xudt.shop.model.UserDTO">
+        select <include refid="Base_Column_List"/>
+        from t_user where username = #{username}
+    </select>
+
+    <!--新增用户-->
+    <insert id="addUser" parameterType="com.xudt.shop.model.UserDTO">
+       insert into t_user (username, password, tel, nickname, create_time, update_time , delete_status)
+        values (#{username}, #{password}, #{tel}, #{nickname}, #{createtime}, #{updatetime}, #{deletestatus})
+    </insert>
+
+    <!--查询用户当前积分-->
+    <select id="findUserPoints"  parameterType="int" resultType="java.math.BigDecimal">
+        select points
+        from t_user where id = #{userId}
+    </select>
+
+    <!--修改用户积分-->
+    <update id="updateUserPoints"  parameterType="com.xudt.shop.model.UserDTO">
+        update t_user set points = #{points} where id = #{id}
+    </update>
+
+    <!--查询用户当前积分-->
+    <select id="findUserInfo"  parameterType="int" resultType="com.xudt.shop.model.UserDTO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user where id = #{userId}
+    </select>
+</mapper>

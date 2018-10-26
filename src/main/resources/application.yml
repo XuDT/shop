@@ -1,0 +1,47 @@
+# 端口
+server:
+  port: 8080
+
+# 日志配置
+logging:
+  config:
+    classpath: logback.xml
+
+# 数据源配置
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/backstage?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+# Freemarker 配置
+# 文件配置路径
+  freemarker:
+    template-loader-path: classpath:/web/
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    # 获取contextPath
+    request-context-attribute: request
+    suffix: .ftl
+    # 是否允许HttpSession属性覆盖
+    allow-session-override: true
+# mybatis配置
+# 实体类包路径
+mybatis:
+  typeAliasesPackage: com.xudt.shop.model
+# mapper.xml路径
+  mapperLocations: classpath:mapper/*.xml
+# mybatis驼峰转换
+  configuration:
+    mapUnderscoreToCamelCase: true
+    map-underscore-to-camel-case: true
+
+
+
+
+
+

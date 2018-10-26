@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--商品管理-->
+<mapper namespace="com.xudt.shop.dao.CommodityDao">
+    <parameterMap id="CommodityDTO" type="com.xudt.shop.model.CommodityDTO"/>
+
+    <sql id="Base_Column_List">
+		id, name, standard, temperature, price, description, commodityImg, type, delete_status
+	</sql>
+
+    <!--获取全部商品-->
+    <select id="findAll" resultType="com.xudt.shop.model.CommodityDTO">
+        select
+        ct.name as typeName, c.id, c.name, c.standard, c.temperature, c.price, c.description, c.commodityImg, c.type, c.delete_status
+        from t_commodity c left join t_commodity_type ct on c.type = ct.id where delete_status = 1
+    </select>
+
+    <!--新增商品-->
+    <insert id="insertCommodity" parameterType="CommodityDTO">
+        insert into t_commodity (name, standard, temperature, price, description, commodityImg, type)
+        values (#{name}, #{standard}, #{temperature}, #{price}, #{description}, #{commodityImg},#{type})
+    </insert>
+
+    <!--修改商品-->
+    <update id="updateCommodity" parameterType="CommodityDTO">
+		update t_commodity set
+		name = #{name}, standard = #{standard}, temperature = #{temperature}, price = #{price}, description = #{description}, type = #{type}
+		where id = #{id}
+	</update>
+
+    <!--根据id获取商品-->
+    <select id="findById" resultType="com.xudt.shop.model.CommodityDTO" parameterType="int">
+        select
+        ct.name as typeName, c.id, c.name, c.standard, c.temperature, c.price, c.description, c.commodityImg, c.type, c.delete_status
+        from t_commodity c left join t_commodity_type ct on c.type = ct.id where c.id = #{id} and delete_status = 1
+    </select>
+
+    <!--根据id删除商品-->
+    <update id="deleteById" parameterType="int">
+		update t_commodity set delete_status = 0 where id = #{id}
+	</update>
+
+    <!--根据名称搜索商品-->
+    <select id="findByKeyword" resultType="com.xudt.shop.model.CommodityDTO" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List" />
+        from t_commodity
+        <where>
+            <choose>
+                <when test="_parameter != null">
+                    name like CONCAT("%",#{keyword},"%") and delete_status = 1
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <!--商品二级分类-->
+    <select id="findChildCommodity" resultType="com.xudt.shop.model.CommodityDTO" parameterType="int">
+        select
+        c.id, c.name, c.standard, c.temperature, c.price, c.commodityImg, c.description, ct.code, ct.name
+        from t_commodity c left join t_commodity_type ct on c.type = ct.id where c.type = #{type} and delete_status = 1
+    </select>
+
+    <!--商品一级分类-->
+    <select id="findParentCommodity" resultType="com.xudt.shop.model.CommodityTypeDTO">
+        select
+        id, code, name from t_commodity_type;
+    </select>
+</mapper>

@@ -1,0 +1,9 @@
+.click-btn {
+    position: relative;
+    left: 0;
+    background-color: #1ab394 !important;
+    font-size: 14px;
+    color:#fff;
+    line-height: 1.429;
+    margin-top: 10px;
+}

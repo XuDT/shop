@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--订单管理-->
+<mapper namespace="com.xudt.shop.dao.OrderDao">
+
+    <parameterMap id="OrderDTO" type="com.xudt.shop.model.OrderDTO"/>
+
+    <sql id="Base_Column_List">
+		id, order_id, commodity_id,commodity_name, commodity_type, commodity_price, status, delete_status, order_time, order_user, order_userId
+	</sql>
+
+    <!--获取所有订单-->
+    <select id="findAll" resultType="com.xudt.shop.model.OrderDTO">
+        select
+         ct.name, o.id, o.order_id, o.commodity_id, o.commodity_name, o.commodity_type,
+         o.commodity_price, o.status, o.delete_status, o.order_time, o.order_user ,o.order_userId
+        from t_order o left join t_commodity_type ct on o.commodity_type = ct.id where delete_status = 1 order by o.order_time
+    </select>
+
+    <!--根据订单号搜索订单-->
+    <select id="findByKeyword" resultType="com.xudt.shop.model.OrderDTO" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List" />
+        from t_order
+        <where>
+            <choose>
+                <when test="_parameter != null">
+                    order_id like CONCAT("%",#{keyword},"%") and delete_status = 1
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <!--新增订单-->
+    <insert id="insertOrder" parameterType="OrderDTO">
+        insert into t_order (id, status, order_id, commodity_id, commodity_price,commodity_name, commodity_type, order_user, order_time, order_userId)
+        values (#{id}, #{status}, #{orderId}, #{commodityId}, #{commodityPrice}, #{commodityName}, #{commodityType}, #{orderUser}, NOW() , #{userId})
+    </insert>
+
+    <!--修改订单-->
+    <update id="updateOrder" parameterType="OrderDTO">
+		update t_order set
+		status = #{status}, order_id = #{orderId}, commodity_id = #{commodityId}, commodity_price = #{commodityPrice},
+		commodity_name = #{commodityName},commodity_type = #{commodityType}, order_user = #{orderUser}, order_time = #{orderTime},order_userId = #{userId}
+		where id = #{id}
+	</update>
+
+    <!--根据id查询订单-->
+    <select id="findById" resultType="com.xudt.shop.model.OrderDTO" parameterType="int">
+        select ct.name, o.id, o.order_id, o.commodity_id, o.commodity_name,
+        o.commodity_type, o.commodity_price, o.status, o.delete_status, o.order_time, o.order_user, o.order_userId
+        from t_order o left join t_commodity_type ct on o.commodity_type = ct.id where o.id = #{id} and delete_status = 1
+    </select>
+
+    <!--根据id删除订单-->
+    <update id="deleteById" parameterType="int">
+		update t_order set delete_status = 0 where id = #{id}
+	</update>
+
+    <!--根据用户id查询用户购物车商品-->
+    <select id="userCarList" resultType="com.xudt.shop.model.OrderDTO" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from t_order where order_userId = #{userId} and status = 0 and delete_status = 1
+    </select>
+
+    <!--付款（修改订单状态）-->
+    <update id="pay" parameterType="int">
+		update t_order set status = 1, order_time = NOW() where id = #{id}
+	</update>
+
+    <!--查询用户已付款订单-->
+    <select id="userOrderList" resultType="com.xudt.shop.model.OrderDTO" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from t_order where order_userId = #{userId} and status = 1 and delete_status = 1
+    </select>
+</mapper>
